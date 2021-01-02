@@ -19,29 +19,25 @@ class TestLayouter < Minitest::Test
   def test_layout_with_spacers
     res = Layouter.rows(
       Layouter.cols(
-        Layouter.spacer(2),
-        Layouter.spacer(1),
+        Layouter.spacer,
+        Layouter.spacer,
       ),
       Layouter.cols(
-        Layouter.spacer(1),
-        Layouter.spacer(2),
+        Layouter.spacer,
+        Layouter.spacer,
       ),
     )
     res.layout(120, 30)
     assert_equal 120, res.calculated_width
     assert_equal 30, res.calculated_height
-    assert_equal 120, res[0].calculated_width
-    assert_equal 15, res[0].calculated_height
-    assert_equal 120, res[1].calculated_width
-    assert_equal 15, res[1].calculated_height
-    assert_equal 80, res[0][0].calculated_width
-    assert_equal 15, res[0][0].calculated_height
-    assert_equal 40, res[0][1].calculated_width
-    assert_equal 15, res[0][1].calculated_height
-    assert_equal 40, res[1][0].calculated_width
-    assert_equal 15, res[1][0].calculated_height
-    assert_equal 80, res[1][1].calculated_width
-    assert_equal 15, res[1][1].calculated_height
+    [0, 1].each do |i|
+      assert_equal 120, res[i].calculated_width
+      assert_equal 15, res[i].calculated_height
+      [0, 1].each do |j|
+        assert_equal 60, res[i][j].calculated_width
+        assert_equal 15, res[i][j].calculated_height
+      end
+    end
   end
 
 end

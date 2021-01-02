@@ -6,7 +6,7 @@ module Layouter
 
       attr_reader :importance
 
-      def initialize(importance)
+      def initialize(importance:)
         if !importance.is_a?(Numeric) || importance < 0
           raise(ArgumentError, "Invalid importance")
         end
