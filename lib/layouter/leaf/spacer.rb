@@ -10,6 +10,11 @@ module Layouter
         @max_width, @max_height = Inf, Inf
       end
 
+      def render
+        layout!
+        [" " * @calculated_width] * @calculated_height
+      end
+
     end
   end
 end

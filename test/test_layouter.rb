@@ -38,6 +38,7 @@ class TestLayouter < Minitest::Test
         assert_equal 15, res[i][j].calculated_height
       end
     end
+    assert_equal [" " * 120] * 30, res.render
   end
 
 end

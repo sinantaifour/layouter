@@ -5,7 +5,7 @@ module Layouter
 
     [
       :min_width, :max_width, :min_height, :max_height,
-       :importance, :layout
+       :importance, :layout, :render
     ].each do |m|
       define_method(m) do
         raise(NotImplementedError, "Implemented by subclasses")

@@ -56,6 +56,18 @@ module Layouter
       @children.map(&:importance).max
     end
 
+    def render
+      layout!
+      if @orientation == :rows
+        @children.map { |child| child.render }.flatten
+      elsif @orientation == :cols
+        children = @children.map(&:render)
+        (0...@calculated_height).map do |i|
+          children.map { |child| child[i] }.join("")
+        end
+      end
+    end
+
     def self.distribute(rem, importances, maxs)
       res = []
       # Distribute based on the importance, adhering to the maxs
