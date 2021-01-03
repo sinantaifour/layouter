@@ -12,7 +12,7 @@ module Layouter
         raise(ArgumentError.new("Invalid orientation"))
       end
       unless children.is_a?(Array) && children.all? { |c| c.is_a?(Element) }
-        raise(ArgumentError.new("Invalid chidlren"))
+        raise(ArgumentError.new("Invalid children"))
       end
       @orientation = orientation
       @children = children
