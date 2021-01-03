@@ -13,6 +13,8 @@ module Layouter
       end
 
       def layout(width, height)
+        # These are LayoutError not AssertionError since layout is part of the
+        # public API, and could be called directly on a leaf.
         unless min_width <= width && width <= max_width
           raise(LayoutError.new(:width, :out_of_range))
         end

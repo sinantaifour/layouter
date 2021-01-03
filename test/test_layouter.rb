@@ -18,7 +18,7 @@ class TestLayouter < Minitest::Test
 
   def test_render_without_layout
     root = Layouter.rows(Layouter.spacer)
-    assert_raises(GenericError) { root.render }
+    assert_raises(StateError) { root.render }
   end
 
   def test_layout_with_spacers

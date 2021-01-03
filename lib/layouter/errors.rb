@@ -1,7 +1,10 @@
 module Layouter
 
-  class GenericError < StandardError
-  end
+  class GenericError < StandardError; end
+
+  class StateError < GenericError; end
+
+  class AssertionError < GenericError; end
 
   class LayoutError < GenericError
 

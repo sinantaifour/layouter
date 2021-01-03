@@ -23,7 +23,7 @@ module Layouter
     private
 
     def layout!
-      raise(GenericError.new("Must layout first")) unless layout?
+      raise(StateError.new("Must layout first")) unless layout?
     end
 
   end
