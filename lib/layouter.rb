@@ -23,5 +23,10 @@ module Layouter
     def annotation(*args)
       Leaf::Annotation.new(*args)
     end
+
+    def literal(*args)
+      Leaf::Annotation.new(*args)
+    end
+
   end
 end
