@@ -4,7 +4,7 @@ If you ever had to deal with dividing the terminal into sub-parts that adjust
 in size when the terminal changes size, then this is the gem for you.
 
 If you're wondering why you would ever need that, check the
-[`termplot`](https://github.com/staii/termplot) gem.
+[`termplot`](https://github.com/sinantaifour/termplot) gem.
 
 ## Installation
 
