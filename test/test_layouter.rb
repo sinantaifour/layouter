@@ -47,6 +47,7 @@ class TestLayouter < Minitest::Test
 
   def test_render_without_layout
     root = Layouter.rows(Layouter.spacer)
+    assert_equal false, root.layout?
     assert_raises(StateError) { root.render }
   end
 
@@ -75,7 +76,7 @@ class TestLayouter < Minitest::Test
     assert_equal 40, root[0][1].calculated_width
     assert_equal 40, root[1][0].calculated_width
     assert_equal 80, root[1][1].calculated_width
-    assert_equal [" " * 120] * 30, root.render
+    assert_equal ([" " * 120] * 30).join("\n"), root.render
   end
 
   def test_layout_with_annotations
@@ -95,7 +96,7 @@ class TestLayouter < Minitest::Test
       "                                                  ",
       "      3.141592653589793       Hello, World!       ",
       "                                                  ",
-    ]
+    ].join("\n")
     assert_equal ref, root.render
   end
 

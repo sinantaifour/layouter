@@ -60,12 +60,10 @@ module Layouter
     def render
       layout!
       if @orientation == :rows
-        @children.map { |child| child.render }.flatten
+        @children.map(&:render).join("\n")
       elsif @orientation == :cols
-        children = @children.map(&:render)
-        (0...@calculated_height).map do |i|
-          children.map { |child| child[i] }.join("")
-        end
+        tmp = @children.map { |child| child.render.split("\n") }
+        tmp[0].zip(*tmp[1..-1]).map(&:join).join("\n")
       end
     end
 

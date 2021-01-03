@@ -15,7 +15,8 @@ module Layouter
       end
 
       def render
-        [@content.to_s]
+        layout!
+        @content.to_s
       end
 
     end

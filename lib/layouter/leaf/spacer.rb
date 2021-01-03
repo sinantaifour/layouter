@@ -16,7 +16,7 @@ module Layouter
 
       def render
         layout!
-        [" " * @calculated_width] * @calculated_height
+        ([" " * @calculated_width] * @calculated_height).join("\n")
       end
 
     end
