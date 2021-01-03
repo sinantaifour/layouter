@@ -51,6 +51,37 @@ class TestLayouter < Minitest::Test
     assert_raises(StateError) { root.render }
   end
 
+  def test_layout_width_too_small
+    root = Layouter.cols(Layouter.literal("Hello, world!"))
+    err = assert_raises(LayoutError) { root.layout(5, 1) }
+    assert_equal :width, err.dimension
+    assert_equal :too_small, err.reason
+  end
+
+  def test_layout_width_too_big
+    root = Layouter.cols(Layouter.literal("Hello, world!"))
+    err = assert_raises(LayoutError) { root.layout(100, 1) }
+    assert_equal :width, err.dimension
+    assert_equal :too_big, err.reason
+  end
+
+  def test_layout_height_too_small
+    root = Layouter.rows(
+      Layouter.literal("Hello, world!"),
+      Layouter.literal("Hello, world!"),
+    )
+    err = assert_raises(LayoutError) { root.layout("Hello, world!".length, 1) }
+    assert_equal :height, err.dimension
+    assert_equal :too_small, err.reason
+  end
+
+  def test_layout_height_too_big
+    root = Layouter.rows(Layouter.literal("Hello, world!"))
+    err = assert_raises(LayoutError) { root.layout("Hello, world!".length, 2) }
+    assert_equal :height, err.dimension
+    assert_equal :too_big, err.reason
+  end
+
   def test_layout_with_spacers
     root = Layouter.rows(
       Layouter.cols(
@@ -100,35 +131,13 @@ class TestLayouter < Minitest::Test
     assert_equal ref, root.render
   end
 
-  def test_layout_width_too_small
-    root = Layouter.cols(Layouter.literal("Hello, world!"))
-    err = assert_raises(LayoutError) { root.layout(5, 1) }
-    assert_equal :width, err.dimension
-    assert_equal :too_small, err.reason
-  end
-
-  def test_layout_width_too_big
-    root = Layouter.cols(Layouter.literal("Hello, world!"))
-    err = assert_raises(LayoutError) { root.layout(100, 1) }
-    assert_equal :width, err.dimension
-    assert_equal :too_big, err.reason
-  end
-
-  def test_layout_height_too_small
+  def test_layout_with_trimmed_annotations
     root = Layouter.rows(
-      Layouter.literal("Hello, world!"),
-      Layouter.literal("Hello, world!"),
+      Layouter.annotation("Hello, world!"),
+      Layouter.annotation(Math::PI),
     )
-    err = assert_raises(LayoutError) { root.layout("Hello, world!".length, 1) }
-    assert_equal :height, err.dimension
-    assert_equal :too_small, err.reason
-  end
-
-  def test_layout_height_too_big
-    root = Layouter.rows(Layouter.literal("Hello, world!"))
-    err = assert_raises(LayoutError) { root.layout("Hello, world!".length, 2) }
-    assert_equal :height, err.dimension
-    assert_equal :too_big, err.reason
+    root.layout(7, 2)
+    assert_equal "Hello,\u2026\n~3.1415", root.render
   end
 
 end

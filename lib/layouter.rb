@@ -24,9 +24,8 @@ module Layouter
       Leaf::Annotation.new(*args)
     end
 
-    def literal(*args)
-      Leaf::Annotation.new(*args)
+    def literal(content)
+      Leaf::Annotation.new(content, trim: false)
     end
-
   end
 end
