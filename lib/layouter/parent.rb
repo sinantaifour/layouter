@@ -26,7 +26,7 @@ module Layouter
       dim = DIM[@orientation]
       value = binding.local_variable_get(dim)
       min, max = send(:"min_#{dim}"), send(:"max_#{dim}")
-      raise(LayoutError.new(dim, :inconsistent)) if min > max
+      raise(AssertionError) if min > max
       raise(LayoutError.new(dim, :too_small)) unless value >= min
       raise(LayoutError.new(dim, :too_big)) unless value <= max
       importances = @children.map(&:importance)
