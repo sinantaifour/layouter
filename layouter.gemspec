@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.date        = '2011-12-30'
   s.authors     = ['Sinan Taifour']
   s.email       = 'sinan@taifour.com'
-  s.summary     = "Create layouters in the terminal."
-  s.description = "Create layouters in the terminal."
+  s.summary     = "A layout engine for terminals."
+  s.description = "A layout engine for terminals."
   s.files       = Dir[DIR + '/lib/**/*.rb']
   s.license     = 'MIT'
 
