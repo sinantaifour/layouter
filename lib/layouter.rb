@@ -4,6 +4,7 @@ require_relative 'layouter/element'
 require_relative 'layouter/parent'
 require_relative 'layouter/leaf/base'
 require_relative 'layouter/leaf/spacer'
+require_relative 'layouter/leaf/annotation'
 
 module Layouter
   class << self
@@ -17,6 +18,10 @@ module Layouter
 
     def spacer(*args)
       Leaf::Spacer.new(*args)
+    end
+
+    def annotation(*args)
+      Leaf::Annotation.new(*args)
     end
   end
 end

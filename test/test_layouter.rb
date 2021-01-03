@@ -40,6 +40,11 @@ class TestLayouter < Minitest::Test
     assert_raises(ArgumentError) { Leaf::Spacer.new(weight: -1) }
   end
 
+  def test_annotation_invalid_arguments
+    assert_raises(ArgumentError) { Leaf::Annotation.new([]) }
+    assert_raises(ArgumentError) { Leaf::Annotation.new(:symbol) }
+  end
+
   def test_render_without_layout
     root = Layouter.rows(Layouter.spacer)
     assert_raises(StateError) { root.render }
@@ -71,6 +76,44 @@ class TestLayouter < Minitest::Test
     assert_equal 40, root[1][0].calculated_width
     assert_equal 80, root[1][1].calculated_width
     assert_equal [" " * 120] * 30, root.render
+  end
+
+  def test_layout_with_annotations
+    root = Layouter.rows(
+      Layouter.spacer,
+      Layouter.cols(
+        Layouter.spacer,
+        Layouter.annotation(Math::PI),
+        Layouter.spacer,
+        Layouter.annotation("Hello, World!"),
+        Layouter.spacer,
+      ),
+      Layouter.spacer,
+    )
+    root.layout(50, 3)
+    ref = [
+      "                                                  ",
+      "      3.141592653589793       Hello, World!       ",
+      "                                                  ",
+    ]
+    assert_equal ref, root.render
+  end
+
+  def test_layout_too_small
+    root = Layouter.rows(
+      Layouter.spacer,
+      Layouter.cols(
+        Layouter.spacer,
+        Layouter.annotation(Math::PI),
+        Layouter.annotation("Hello, World!"),
+      ),
+    )
+    assert_raises(LayoutError) { root.layout(10, 3) }
+  end
+
+  def test_layout_too_big
+    root = Layouter.annotation(Math::PI)
+    assert_raises(LayoutError) { root.layout(100, 3) }
   end
 
 end
