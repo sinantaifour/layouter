@@ -7,6 +7,7 @@ module Layouter
     }.freeze
 
     def initialize(orientation, children)
+      super()
       unless DIM.keys.include?(orientation)
         raise(ArgumentError.new("Invalid orientation"))
       end

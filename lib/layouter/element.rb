@@ -3,6 +3,10 @@ module Layouter
 
     attr_reader :calculated_width, :calculated_height
 
+    def initialize
+      @calculated_width = @calculated_height = nil
+    end
+
     [
       :min_width, :max_width, :min_height, :max_height,
        :importance, :layout, :render
