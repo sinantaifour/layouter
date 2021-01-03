@@ -136,8 +136,42 @@ class TestLayouter < Minitest::Test
       Layouter.annotation("Hello, world!"),
       Layouter.annotation(Math::PI),
     )
-    root.layout(7, 2)
-    assert_equal "Hello,\u2026\n~3.1415", root.render
+    root.layout(6, 2)
+    assert_equal "Hello…\n~3.141", root.render
+  end
+
+  def test_layout_with_custom
+    root = Layouter.rows(Layouter.custom { |w, h| (["#" * w] * h).join("\n") })
+    root.layout(6, 4)
+    assert_equal (["#" * 6] * 4).join("\n"), root.render
+  end
+
+  def test_layout_with_bordered
+    chars = {
+      tl: "\u250c", tr: "\u2510", bl: "\u2514", br: "\u2518",
+      t: "\u2500", l: "\u2502", b: "\u2500", r: "\u2502",
+    }
+    root = Layouter.bordered(chars, width: (5..15), height: (5..15)) do |w, h|
+      h.times.map do |j|
+        w.times.map do |i|
+          "!@*~%^"[(i + j * w) % 6]
+        end.join("")
+      end.join("\n")
+    end
+    root.layout(10, 10)
+    ref = [
+      "┌────────┐",
+      "│!@*~%^!@│",
+      "│*~%^!@*~│",
+      "│%^!@*~%^│",
+      "│!@*~%^!@│",
+      "│*~%^!@*~│",
+      "│%^!@*~%^│",
+      "│!@*~%^!@│",
+      "│*~%^!@*~│",
+      "└────────┘",
+    ].join("\n")
+    assert_equal ref, root.render
   end
 
 end
