@@ -2,8 +2,6 @@ module Layouter
   module Leaf
     class Base < Element
 
-      Inf = Float::INFINITY
-
       attr_reader :importance
 
       def initialize(importance:)
