@@ -9,9 +9,9 @@ module Layouter
           raise(ArgumentError, "Weight must be a number")
         end
         raise(ArgumentError, "Weight must more than 1") if weight < 1
-        super(importance: Float::EPSILON * weight)
+        super(importance: EPS * weight)
         @min_width = @min_height = 0
-        @max_width = @max_height = Float::INFINITY
+        @max_width = @max_height = INF
       end
 
       def render

@@ -2,6 +2,9 @@ module Layouter
   module Leaf
     class Base < Element
 
+      INF = Float::INFINITY
+      EPS = Float::EPSILON
+
       attr_reader :importance
 
       def initialize(importance:)
@@ -9,7 +12,7 @@ module Layouter
         if !importance.is_a?(Numeric) || importance < 0
           raise(ArgumentError, "Invalid importance")
         end
-        @importance = importance == 0 ? Float::EPSILON : importance
+        @importance = importance == 0 ? EPS : importance
       end
 
       def layout(width, height)
