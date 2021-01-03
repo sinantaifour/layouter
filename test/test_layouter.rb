@@ -5,6 +5,30 @@ class TestLayouter < Minitest::Test
 
   include Layouter
 
+  def test_distribute
+    assert_equal [], Parent.distribute(0, [], [])
+    assert_equal [10], Parent.distribute(10, [1], [100])
+    assert_equal [10], Parent.distribute(10, [1], [Float::INFINITY])
+    assert_equal [33, 67], Parent.distribute(100, [1, 2], [100, 100])
+    assert_equal [33, 67], Parent.distribute(100, [1, 2], [33, 100])
+    assert_equal [32, 68], Parent.distribute(100, [1, 2], [32, 100])
+    assert_equal [100, 100], Parent.distribute(200, [1, 2], [100, 100])
+    assert_equal [67, 133], Parent.distribute(200, [1, 2], [100, 200])
+    assert_equal [66, 67, 67], Parent.distribute(200, [1, 1, 1], [100] * 3)
+    assert_equal [66, 67, 67], Parent.distribute(200, [1, 1, 1.001], [100] * 3)
+    assert_equal [67, 66, 67], Parent.distribute(200, [1.001, 1, 1], [100] * 3)
+    assert_equal [33, 33, 34], Parent.distribute(100, [1, 1, 1], [50] * 3)
+    assert_equal [33, 34, 33], Parent.distribute(100, [1, 1, 0.999], [50] * 3)
+    assert_equal [66, 67, 67], Parent.distribute(200, [1, 1, 1], [66, 70, 70])
+  end
+
+  def test_distribute_assertions
+    assert_raises(AssertionError) { Parent.distribute(1.0, [], []) }
+    assert_raises(AssertionError) { Parent.distribute(1, [1], [1, 2]) }
+    assert_raises(AssertionError) { Parent.distribute(1, [1], [1.0]) }
+    assert_raises(AssertionError) { Parent.distribute(2, [1], [1]) }
+  end
+
   def test_parent_invalid_arguments
     assert_raises(ArgumentError) { Parent.new(:stuff, []) }
     assert_raises(ArgumentError) { Parent.new(:rows, [1, 2]) }

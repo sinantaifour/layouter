@@ -69,37 +69,44 @@ module Layouter
       end
     end
 
-    def self.distribute(rem, importances, maxs)
-      res = []
-      # Distribute based on the importance, adhering to the maxs
-      tuples = (0...importances.length).zip(importances.map(&:to_f))
-      while !tuples.empty?
-        sum = tuples.map(&:last).sum
-        tuples = tuples.map { |index, value| [index, value * rem / sum] }
-        break if tuples.all? { |index, value| value <= maxs[index] }
-        tuples = tuples.reject do |index, value|
-          if maxs[index] <= value
-            res << [index, maxs[index]]
-            rem -= maxs[index]
-            next true
-          end
-          false
+    def self.distribute(value, importances, maxs)
+      raise(AssertionError) unless value.is_a?(Integer) # Avoid endless loops.
+      raise(AssertionError) unless value <= maxs.sum # Avoid endless loops.
+      raise(AssertionError) unless importances.length == maxs.length
+      unless maxs.all? { |v| v.is_a?(Integer) || v == Float::INFINITY }
+        raise(AssertionError)
+      end
+      data = importances.zip(maxs).map.with_index do |(importance, max), i|
+        { index: i, value: 0, importance: importance, max: max }
+      end
+      while true # Distribute based on the importance, adhering to the maxs.
+        extra = value - data.map { |h| h[:value] }.sum
+        break if extra <= Float::EPSILON * data.length
+        candidates = data.select { |h| h[:value] < h[:max] }
+        denominator = candidates.map { |h| h[:importance] }.sum.to_f
+        candidates.each do |h|
+          share = extra * h[:importance] / denominator
+          h[:value] = h[:value] + share > h[:max] ? h[:max] : h[:value] + share
         end
       end
-      res += tuples
-      # Turn into integers, filling up any extra or missing value.
-      diff = res.map(&:last).sum.to_i - res.map(&:last).map(&:to_i).sum
-      res = res.sort_by(&:first).map(&:last).map(&:to_i)
-      tuples = (0...importances.length).zip(importances.map(&:to_f))
-      tuples = tuples.sort_by(&:last)
-      tuples = tuples.reverse if diff > 0
-      delta = diff > 0 ? 1 : -1
-      tuples.cycle do |index, _|
-        break if diff == 0
-        res[index] += delta
-        diff -= delta
+      data.each { |h| h[:value] = h[:value].round }
+      while true # Fill up any extra or missing value from turning to integers.
+        extra = value - data.map { |h| h[:value] }.sum
+        break if extra == 0
+        delta = extra > 0 ? 1 : -1
+        data = data.sort_by { |h| h[:importance] }
+        data = data.reverse if extra > 0
+        data.cycle do |h|
+          if h[:max] > h[:value] && h[:value] > 0
+            h[:value] += delta
+            extra -= delta
+            break if extra == 0
+          end
+        end
       end
-      res
+      raise(AssertionError) unless data.map { |h| h[:value] }.sum == value
+      raise(AssertionError) unless data.all? { |h| h[:value] <= h[:max] }
+      data.sort_by { |h| h[:index] }.map { |h| h[:value] }
     end
 
   end
