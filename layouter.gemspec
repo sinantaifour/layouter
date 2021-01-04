@@ -1,6 +1,6 @@
 require_relative 'lib/layouter/version'
 
-DIR = File.expand_path(File.dirname(__FILE__))
+DIR = File.expand_path(File.dirname(__FILE__)) + '/'
 
 Gem::Specification.new do |s|
   s.name        = 'layouter'
@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = 'sinan@taifour.com'
   s.summary     = "A layout engine for terminals."
   s.description = "A layout engine for terminals."
-  s.files       = Dir[DIR + '/lib/**/*.rb']
+  s.files       = Dir[DIR + 'lib/**/*.rb'].map { |v| v.gsub(DIR, "") }
   s.license     = 'MIT'
 
   s.add_development_dependency 'rake', '~> 12.0'
